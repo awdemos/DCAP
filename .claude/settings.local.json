@@ -5,7 +5,8 @@
       "Bash(cargo build:*)",
       "Bash(timeout:*)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
