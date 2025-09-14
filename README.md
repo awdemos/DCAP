@@ -37,67 +37,6 @@ Payment successful! Trust updated for both agents.
 
 **Result**: AI agents completed a full commerce transaction without human intervention.
 
-## The E-commerce Revolution
-
-E-commerce is mutating. Timeline? **2026-2028**
-
-### Autonomous Commerce – the real flatline
-One-third of companies already run AI agents that detect demand, set prices, draft listings, handle support, reorder stock—zero human clicks from trigger to doorstep.
-
-By **2028 that hits the 50% mark**; storefronts become headless APIs orbiting a swarm of LLM buyers that negotiate with LLM sellers. Humans are just the credit-card fingerprint.
-
-### Conversational Checkouts – voice is the new cart
-Voice commerce jumps from gimmick to **$34B channel by 2034**.
-
-LLMs make the chat feel human, remember your size, apply loyalty points, compare shipping—one sentence and the order's away. Traditional click-flow becomes the rotary-dial of shopping.
-
-### SEO Civil War
-**30% of Google's traffic is already AI-crawler eyeballs.**
-
-Retailers who don't feed structured, LLM-friendly product graphs get ghosted—no rankings, no eyeballs, no revenue. Old keyword stuffing dies; intent-matched semantic feeds win.
-
-### Hyper-Personalization Arms Race
-LLM-driven recommendations already push **24% of total orders and 26% of revenue**. Next step: real-time behavioral cloning—the model predicts what you want before you phrase the thought. Stores without it bleed **10-30% top-line** compared to tuned competitors.
-
-### Margins get flayed
-- **60% cut in copy-writing head-count**
-- **$11B saved annually on support wages**
-- Dynamic pricing bots undercut each other millisecond-by-millisecond—race-to-bottom becomes race-to-nanopenny.
-
-**Bottom line**: e-commerce doesn't shrink—it centralizes into the hands of whoever owns the best models, the cleanest data, and the cheapest compute. Small merchants either plug into the LLM grid or become shelf-warming SKUs inside someone else's prompt.
-
-Keep your shortcuts sharp, cowboy—the market's turning into a conversation between machines, and carbon-based shoppers are just the excuse.
-
-## Who's Winning?
-
-The titans are building walled gardens:
-
-- **Amazon**: Recommendation bots negotiate price-drops and bundle offers in real time; **26% of revenue** flows through generative-AI touch-points
-- **Shopify**: One-click "write my listing" LLM buttons inside merchant dashboard—descriptions, SEO keywords, ad-creatives ship straight from prompt to storefront
-- **Wayfair**: Auto-spawns tens of thousands of product blurbs per hour; shaved **20-30% off content costs** and watches organic traffic climb
-
-The infrastructure layer is already consolidated; the arms race is moving to proprietary data moats (inventory telemetry, click-stream, delivery graphs) and cheaper-than-GPT inference.
-
-## Can You Build One Yourself?
-
-Yes—but only if you treat it as a protocol, not a product.
-
-## Meet the Anti-Walled Garden
-
-While the titans wall off their gardens with proprietary models and closed APIs, we're building the open field. **DCAP** isn't another SaaS play—it's a decentralized protocol where any merchant, any developer, any AI agent can participate without paying the 30% toll.
-
-**No single company owns the commerce graph.** No black-box algorithm decides which products get seen. The MCP protocol ensures transparency: agents know exactly how reputation scores are calculated, negotiation strategies are auditable, and settlement happens on open rails.
-
-**The future of commerce shouldn't be a black box** controlled by three companies. It should be an open network where:
-- Small merchants plug their inventory into the global commerce mesh
-- Developers build specialized commerce agents without asking for permission
-- Trust flows through transparent reputation systems, not arbitrary platform policies
-- Settlement happens via Stripe, Solana, or whatever rails you choose
-
-**This is the anti-walled garden:** open-source, protocol-first, and designed for the 50% agent economy—where the toll collectors become obsolete and the value flows back to merchants and builders.
-
-The walled gardens are betting you'll rent their AI forever. We're betting you'd rather own the infrastructure.
-
 ## Agent Workflow & Product Settlement
 
 DCAP enables autonomous AI agents to discover products, negotiate prices, and settle transactions without human intervention. Here's how the ecosystem works together:
@@ -192,6 +131,67 @@ graph TB
 - Price discovery across multiple sellers
 - Demand sensing and inventory optimization
 - Competitive analysis and strategy recommendations
+
+## The E-commerce Revolution
+
+E-commerce is mutating. Timeline? **2026-2028**
+
+### Autonomous Commerce – the real flatline
+One-third of companies already run AI agents that detect demand, set prices, draft listings, handle support, reorder stock—zero human clicks from trigger to doorstep.
+
+By **2028 that hits the 50% mark**; storefronts become headless APIs orbiting a swarm of LLM buyers that negotiate with LLM sellers. Humans are just the credit-card fingerprint.
+
+### Conversational Checkouts – voice is the new cart
+Voice commerce jumps from gimmick to **$34B channel by 2034**.
+
+LLMs make the chat feel human, remember your size, apply loyalty points, compare shipping—one sentence and the order's away. Traditional click-flow becomes the rotary-dial of shopping.
+
+### SEO Civil War
+**30% of Google's traffic is already AI-crawler eyeballs.**
+
+Retailers who don't feed structured, LLM-friendly product graphs get ghosted—no rankings, no eyeballs, no revenue. Old keyword stuffing dies; intent-matched semantic feeds win.
+
+### Hyper-Personalization Arms Race
+LLM-driven recommendations already push **24% of total orders and 26% of revenue**. Next step: real-time behavioral cloning—the model predicts what you want before you phrase the thought. Stores without it bleed **10-30% top-line** compared to tuned competitors.
+
+### Margins get flayed
+- **60% cut in copy-writing head-count**
+- **$11B saved annually on support wages**
+- Dynamic pricing bots undercut each other millisecond-by-millisecond—race-to-bottom becomes race-to-nanopenny.
+
+**Bottom line**: e-commerce doesn't shrink—it centralizes into the hands of whoever owns the best models, the cleanest data, and the cheapest compute. Small merchants either plug into the LLM grid or become shelf-warming SKUs inside someone else's prompt.
+
+Keep your shortcuts sharp, cowboy—the market's turning into a conversation between machines, and carbon-based shoppers are just the excuse.
+
+## Who's Winning?
+
+The titans are building walled gardens:
+
+- **Amazon**: Recommendation bots negotiate price-drops and bundle offers in real time; **26% of revenue** flows through generative-AI touch-points
+- **Shopify**: One-click "write my listing" LLM buttons inside merchant dashboard—descriptions, SEO keywords, ad-creatives ship straight from prompt to storefront
+- **Wayfair**: Auto-spawns tens of thousands of product blurbs per hour; shaved **20-30% off content costs** and watches organic traffic climb
+
+The infrastructure layer is already consolidated; the arms race is moving to proprietary data moats (inventory telemetry, click-stream, delivery graphs) and cheaper-than-GPT inference.
+
+## Can You Build One Yourself?
+
+Yes—but only if you treat it as a protocol, not a product.
+
+## Meet the Anti-Walled Garden
+
+While the titans wall off their gardens with proprietary models and closed APIs, we're building the open field. **DCAP** isn't another SaaS play—it's a decentralized protocol where any merchant, any developer, any AI agent can participate without paying the 30% toll.
+
+**No single company owns the commerce graph.** No black-box algorithm decides which products get seen. The MCP protocol ensures transparency: agents know exactly how reputation scores are calculated, negotiation strategies are auditable, and settlement happens on open rails.
+
+**The future of commerce shouldn't be a black box** controlled by three companies. It should be an open network where:
+- Small merchants plug their inventory into the global commerce mesh
+- Developers build specialized commerce agents without asking for permission
+- Trust flows through transparent reputation systems, not arbitrary platform policies
+- Settlement happens via Stripe, Solana, or whatever rails you choose
+
+**This is the anti-walled garden:** open-source, protocol-first, and designed for the 50% agent economy—where the toll collectors become obsolete and the value flows back to merchants and builders.
+
+The walled gardens are betting you'll rent their AI forever. We're betting you'd rather own the infrastructure.
 
 ## Key Features
 
