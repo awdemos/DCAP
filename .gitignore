@@ -1,0 +1,115 @@
+# Rust build artifacts
+/target
+**/*.rs.bk
+*.pdb
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Dependency directories
+vendor/
+
+# Temporary database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Configuration files with secrets
+config.toml
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+
+# Coverage reports
+tarpaulin-report.html
+coverage/
+
+# Documentation builds
+doc/
+docs/build/
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+
+# Cache directories
+.cache/
+.cargo/registry/cache/
+
+# Backup files
+*.bak
+*.backup
+
+# Debug information
+debug/
+release/
+
+# Profiling data
+*.prof
+*.svg
+
+# Clippy output
+clippy.toml
+
+# Rust Analyzer
+rust-analyzer/
+
+# Temporary testing files
+*.tmp.db
+test_*.db
+
+# Example output files
+examples/output/
+examples/logs/
+
+# Docker volumes
+data/
+volumes/
+
+# Kubernetes secrets
+secrets/
+
+# Build cache
+.cargo/
+.build_cache/
+
+# Package manager files
+Cargo.lock
+
+# Node.js (if any frontend components)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if any ML components)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
+ENV/
+.venv/
+
+# Temporary upload files
+uploads/
+temp_uploads/

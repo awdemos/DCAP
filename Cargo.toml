@@ -1,0 +1,98 @@
+[package]
+name = "dcap"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "Decentralized Commerce Agentic Protocol - LLM-to-LLM commerce infrastructure"
+license = "BUSL-1.1"
+repository = "https://github.com/yourusername/dcap"
+keywords = ["commerce", "llm", "agents", "protocol", "marketplace", "blockchain"]
+categories = ["web-programming", "cryptography", "network-programming"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.40", features = ["full"] }
+
+# Web framework
+axum = "0.7"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+
+# HTTP client
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# JWT handling
+jsonwebtoken = "9.3"
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "sqlite", "chrono", "uuid"] }
+
+# UUID generation
+uuid = { version = "1.10", features = ["v4", "serde"] }
+
+# Cryptography
+ed25519-dalek = "2.0"
+base64 = "0.22"
+sha2 = "0.10"
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Configuration
+config = "0.14"
+toml = "0.8"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# CLI
+clap = { version = "4.5", features = ["derive"] }
+
+# LLM integration (placeholder for actual LLM library)
+async-openai = "0.24"
+
+# Stripe integration (optional - add back when version issues are resolved)
+# stripe-rust = "0.23"
+
+# Utility
+once_cell = "1.19"
+parking_lot = "0.12"
+rand = "0.8"
+
+# MCP (Model Context Protocol) support - custom implementation
+serde_yaml = "0.9"
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockall = "0.13"
+tempfile = "3.10"
+criterion = { version = "0.5", features = ["html_reports"] }
+
+[[bin]]
+name = "buyer-agent"
+path = "src/bin/buyer_agent.rs"
+
+[[bin]]
+name = "seller-agent"
+path = "src/bin/seller_agent.rs"
+
+[[bin]]
+name = "discovery"
+path = "src/bin/discovery.rs"
+
+[[bin]]
+name = "settlement"
+path = "src/bin/settlement.rs"
+
+[[bin]]
+name = "mcp-server"
+path = "src/bin/mcp_server.rs"

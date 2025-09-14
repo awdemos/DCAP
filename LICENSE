@@ -1,0 +1,50 @@
+Business Source License 1.1
+
+Parameters:
+
+Licensor: ["Negotiation Agents Contributors"]
+Licensed Work: "negotiation-agents"
+Change Date: 2028-11-01
+Change License: LicenseRef-Apache-2.0
+
+Business Source License 1.1
+
+License text copyright (c) 2017 MariaDB Corporation AB, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation AB.
+
+Terms
+
+The Licensor hereby grants you the right to copy, modify, create derivative works, redistribute, and make non-production use of the Licensed Work. The Licensor may make an Additional Use Grant, above, permitting limited production use.
+
+Effective on the Change Date, or the fourth anniversary of the first publicly available distribution of a specific version of the Licensed Work under this License, whichever comes first, the Licensor hereby grants you rights under the terms of the Change License, and the rights granted in the paragraph above terminate.
+
+If your use of the Licensed Work does not comply with the requirements currently in effect as described in this License, you must purchase a commercial license from the Licensor.
+
+Notwithstanding any other term of this License, if you modify the Licensed Work, you may not make your modifications available to others (including by making your modifications available for others to use) without a commercial license from the Licensor.
+
+Commercial License Requirements
+
+Using negotiation-agents for production use requires a commercial license. Contact us for more information. Non-production use, such as using negotiation-agents for a home lab, does not require a license.
+
+For more information about commercial licensing, please contact the Licensor at: licensing@negotiation-agents.com
+
+Commercial License Notice
+
+This software is available under two different licenses:
+
+1. Business Source License (BUSL) - For non-production use
+2. Commercial License - For production use
+
+The BUSL allows you to:
+- Use, modify, and distribute the software for non-production purposes
+- Test and evaluate the software in development environments
+- Use the software for personal projects and home labs
+
+If you want to use this software in production, you must purchase a commercial license.
+
+Production use includes but is not limited to:
+- Using the software to run a commercial service
+- Offering the software as part of a paid product or service
+- Using the software in a commercial environment where it generates revenue
+
+For commercial licensing inquiries, please contact us at licensing@negotiation-agents.com
