@@ -62,6 +62,20 @@ pub struct Quote {
     pub ttl_seconds: u32,
     pub metadata: HashMap<String, String>,
     pub created_at: DateTime<Utc>,
+
+    // SGX attestation fields
+    pub sgx_quote: Option<SgxQuote>,
+    pub rfq_hash: Option<String>,
+    pub sgx_verified: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SgxQuote {
+    pub quote_data: String,
+    pub report_data: String,
+    pub signature: String,
+    pub enclave_version: u32,
+    pub timestamp: DateTime<Utc>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -192,6 +206,36 @@ impl Quote {
             ttl_seconds,
             metadata: HashMap::new(),
             created_at: Utc::now(),
+            sgx_quote: None,
+            rfq_hash: None,
+            sgx_verified: false,
+        }
+    }
+
+    pub fn with_sgx_attestation(
+        rfq_id: TransactionId,
+        seller_id: AgentId,
+        price: f64,
+        currency: String,
+        available_quantity: u32,
+        ttl_seconds: u32,
+        sgx_quote: Option<SgxQuote>,
+        rfq_hash: Option<String>,
+    ) -> Self {
+        Self {
+            id: Uuid::new_v4(),
+            rfq_id,
+            seller_id,
+            price,
+            currency,
+            available_quantity,
+            delivery_estimate: None,
+            ttl_seconds,
+            metadata: HashMap::new(),
+            created_at: Utc::now(),
+            sgx_quote: sgx_quote.clone(),
+            rfq_hash,
+            sgx_verified: sgx_quote.is_some(),
         }
     }
 

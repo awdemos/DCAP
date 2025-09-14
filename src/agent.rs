@@ -1,9 +1,10 @@
 use crate::{
     discovery::{DiscoveryService, SearchRequest},
     error::{NegotiationError, Result},
-    model::*,
+    model::{Quote, RFQ, SgxQuote, Product, PaymentMethod, Negotiation, AgentInfo, AgentType},
     settlement::SettlementService,
     trust::TrustSystem,
+    sgx_quote::{SgxQuoteManager, SgxConfig},
     AgentId, TransactionId,
 };
 use chrono::{Duration, Utc, Timelike};
@@ -12,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use uuid::Uuid;
 use base64::{engine::general_purpose, Engine};
+use sha2::{Digest, Sha256};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BuyerAgentConfig {
@@ -48,6 +50,7 @@ pub struct BuyerAgent {
     trust: TrustSystem,
     settlement: SettlementService,
     active_negotiations: HashMap<TransactionId, Negotiation>,
+    sgx_manager: SgxQuoteManager,
 }
 
 impl BuyerAgent {
@@ -58,6 +61,9 @@ impl BuyerAgent {
         settlement: SettlementService,
     ) -> Result<Self> {
         let client = Client::new();
+        let sgx_config = SgxConfig::from_env();
+        let sgx_manager = SgxQuoteManager::new(sgx_config.enabled);
+
         Ok(Self {
             config,
             client,
@@ -65,6 +71,7 @@ impl BuyerAgent {
             trust,
             settlement,
             active_negotiations: HashMap::new(),
+            sgx_manager,
         })
     }
 
@@ -124,6 +131,25 @@ impl BuyerAgent {
 
         if response.status().is_success() {
             let quote: Quote = response.json().await?;
+
+            // Verify SGX attestation if enabled
+            if let Some(rfq_hash) = &quote.rfq_hash {
+                let sgx_quote = quote.sgx_quote.as_ref().map(|q| crate::sgx_quote::SgxQuote {
+                    quote_data: general_purpose::STANDARD.decode(&q.quote_data).unwrap_or_default(),
+                    report_data: general_purpose::STANDARD.decode(&q.report_data).unwrap_or_default(),
+                    signature: general_purpose::STANDARD.decode(&q.signature).unwrap_or_default(),
+                    enclave_version: q.enclave_version,
+                    timestamp: q.timestamp,
+                });
+
+                let is_verified = self.sgx_manager.verify_quote(&sgx_quote, &rfq).await?;
+                if !is_verified {
+                    return Err(NegotiationError::Validation("SGX quote verification failed".to_string()));
+                }
+            } else if self.sgx_manager.is_enabled() {
+                return Err(NegotiationError::Validation("Quote missing SGX attestation".to_string()));
+            }
+
             let negotiation = self.active_negotiations.get_mut(&negotiation.id).unwrap();
             negotiation.add_quote(&quote)?;
             // self.database.update_negotiation(negotiation).await?;
@@ -247,6 +273,7 @@ pub struct SellerAgent {
     config: SellerAgentConfig,
     discovery: DiscoveryService,
     trust: TrustSystem,
+    sgx_manager: SgxQuoteManager,
 }
 
 impl SellerAgent {
@@ -255,10 +282,14 @@ impl SellerAgent {
         discovery: DiscoveryService,
         trust: TrustSystem,
     ) -> Result<Self> {
+        let sgx_config = SgxConfig::from_env();
+        let sgx_manager = SgxQuoteManager::new(sgx_config.enabled);
+
         Ok(Self {
             config,
             discovery,
             trust,
+            sgx_manager,
         })
     }
 
@@ -299,13 +330,35 @@ impl SellerAgent {
         let dynamic_pricing_factor = self.calculate_dynamic_pricing(&rfq, buyer_reputation).await?;
         let final_price = base_price * dynamic_pricing_factor;
 
-        let quote = Quote::new(
+        // Generate SGX attestation if enabled
+        let sgx_quote = self.sgx_manager.generate_attested_quote(&rfq).await?;
+        let rfq_hash = if sgx_quote.is_some() {
+            let rfq_json = serde_json::to_vec(&rfq)
+                .map_err(|e| NegotiationError::Validation(format!("Failed to serialize RFQ: {}", e)))?;
+            let mut hasher = Sha256::new();
+            hasher.update(&rfq_json);
+            Some(hex::encode(hasher.finalize()))
+        } else {
+            None
+        };
+
+        let sgx_quote_model = sgx_quote.map(|q| SgxQuote {
+            quote_data: general_purpose::STANDARD.encode(&q.quote_data),
+            report_data: general_purpose::STANDARD.encode(&q.report_data),
+            signature: general_purpose::STANDARD.encode(&q.signature),
+            enclave_version: q.enclave_version,
+            timestamp: q.timestamp,
+        });
+
+        let quote = Quote::with_sgx_attestation(
             rfq.id,
             self.config.agent_id,
             final_price,
             product.currency.clone(),
             rfq.quantity,
             3600, // 1 hour TTL
+            sgx_quote_model,
+            rfq_hash,
         );
 
         Ok(quote)

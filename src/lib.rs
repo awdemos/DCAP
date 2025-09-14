@@ -19,6 +19,7 @@ pub mod model;
 pub mod settlement;
 pub mod trust;
 pub mod mcp;
+pub mod sgx_quote;
 
 pub use agent::{BuyerAgent, SellerAgent};
 pub use config::AppConfig;
@@ -27,6 +28,7 @@ pub use error::{NegotiationError, Result};
 pub use model::{NegotiationRecord, Product, Quote, RFQ, PaymentMethod};
 pub use settlement::SettlementService;
 pub use trust::{TrustSystem, ReputationScore};
+pub use sgx_quote::{SgxQuoteManager, SgxConfig, SgxQuote};
 
 
 pub type TransactionId = uuid::Uuid;

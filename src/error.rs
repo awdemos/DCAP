@@ -50,6 +50,15 @@ pub enum NegotiationError {
 
     #[error("Invalid input: {0}")]
     InvalidInput(String),
+
+    #[error("SGX error: {0}")]
+    Sgx(String),
+
+    #[error("SGX quote verification failed: {0}")]
+    SgxVerification(String),
+
+    #[error("SGX enclave error: {0}")]
+    SgxEnclave(String),
 }
 
 impl From<serde_json::Error> for NegotiationError {
@@ -73,5 +82,17 @@ impl From<uuid::Error> for NegotiationError {
 impl From<std::io::Error> for NegotiationError {
     fn from(err: std::io::Error) -> Self {
         NegotiationError::Io(err.to_string())
+    }
+}
+
+impl From<hex::FromHexError> for NegotiationError {
+    fn from(err: hex::FromHexError) -> Self {
+        NegotiationError::Sgx(err.to_string())
+    }
+}
+
+impl From<base64::DecodeError> for NegotiationError {
+    fn from(err: base64::DecodeError) -> Self {
+        NegotiationError::Sgx(err.to_string())
     }
 }

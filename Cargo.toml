@@ -71,6 +71,10 @@ rand = "0.8"
 # MCP (Model Context Protocol) support - custom implementation
 serde_yaml = "0.9"
 
+# SGX/Edgeless dependencies (mock for development)
+# In production, these would be real SGX dependencies
+hex = "0.4"
+
 [dev-dependencies]
 tokio-test = "0.4"
 mockall = "0.13"
