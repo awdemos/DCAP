@@ -191,7 +191,7 @@ While the titans wall off their gardens with proprietary models and closed APIs,
 
 **This is the anti-walled garden:** open-source, protocol-first, and designed for the 50% agent economy—where the toll collectors become obsolete and the value flows back to merchants and builders.
 
-The walled gardens are betting you'll rent their AI forever. We're betting you'd rather own the infrastructure.
+The walled gardens are betting you'll rent their AI forever. We're betting you'd rather not.
 
 ## Key Features
 
