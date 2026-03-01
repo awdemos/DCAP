@@ -163,7 +163,8 @@ async fn setup_seller_agent(
         payment_methods: vec![PaymentMethod::Stripe, PaymentMethod::Escrow],
         llm_config: LLMConfig {
             model: "gpt-4".to_string(),
-            api_key: "demo-key".to_string(),
+            api_key: std::env::var("OPENAI_API_KEY")
+                .unwrap_or_else(|_| "demo-key-not-for-production".to_string()),
             max_tokens: 1000,
             temperature: 0.7,
         },
@@ -192,7 +193,8 @@ async fn setup_buyer_agent(
         default_ttl_hours: 48,
         llm_config: LLMConfig {
             model: "gpt-4".to_string(),
-            api_key: "demo-key".to_string(),
+            api_key: std::env::var("OPENAI_API_KEY")
+                .unwrap_or_else(|_| "demo-key-not-for-production".to_string()),
             max_tokens: 1000,
             temperature: 0.7,
         },

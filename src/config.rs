@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Default)]
 pub struct AppConfig {
     pub server: ServerConfig,
     pub database: DatabaseConfig,
@@ -37,6 +38,7 @@ pub struct DiscoveryConfig {
 }
 
 #[derive(Debug, Deserialize, Clone, Serialize)]
+#[derive(Default)]
 pub struct SettlementConfig {
     pub stripe_secret_key: Option<String>,
     pub solana_rpc_url: Option<String>,
@@ -69,19 +71,6 @@ pub struct LoggingConfig {
     pub file: Option<String>,
 }
 
-impl Default for AppConfig {
-    fn default() -> Self {
-        Self {
-            server: ServerConfig::default(),
-            database: DatabaseConfig::default(),
-            discovery: DiscoveryConfig::default(),
-            settlement: SettlementConfig::default(),
-            trust: TrustConfig::default(),
-            llm: LLMConfig::default(),
-            logging: LoggingConfig::default(),
-        }
-    }
-}
 
 impl Default for ServerConfig {
     fn default() -> Self {
@@ -115,16 +104,6 @@ impl Default for DiscoveryConfig {
     }
 }
 
-impl Default for SettlementConfig {
-    fn default() -> Self {
-        Self {
-            stripe_secret_key: None,
-            solana_rpc_url: None,
-            escrow_service_url: None,
-            webhook_secret: None,
-        }
-    }
-}
 
 impl Default for TrustConfig {
     fn default() -> Self {
@@ -163,10 +142,10 @@ impl Default for LoggingConfig {
 impl AppConfig {
     pub fn load<P: AsRef<Path>>(path: P) -> Result<Self> {
         let config_str = std::fs::read_to_string(path)
-            .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to read config file: {}", e)))?;
+            .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to read config file: {e}")))?;
 
         let config: AppConfig = toml::from_str(&config_str)
-            .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to parse config file: {}", e)))?;
+            .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to parse config file: {e}")))?;
 
         Ok(config)
     }
@@ -254,10 +233,10 @@ impl AppConfig {
 pub fn create_default_config_file<P: AsRef<Path>>(path: P) -> Result<()> {
     let default_config = AppConfig::default();
     let toml_str = toml::to_string_pretty(&default_config)
-        .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to serialize default config: {}", e)))?;
+        .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to serialize default config: {e}")))?;
 
     std::fs::write(path, toml_str)
-        .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to write default config file: {}", e)))?;
+        .map_err(|e| crate::error::NegotiationError::Config(format!("Failed to write default config file: {e}")))?;
 
     Ok(())
 }

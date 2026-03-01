@@ -7,19 +7,20 @@ use crate::{
     config::AppConfig,
     discovery::{DiscoveryService, RegisterRequest, SearchRequest},
     error::{NegotiationError, Result},
-    model::{PaymentMethod, AgentType},
+
     settlement::SettlementService,
     trust::TrustSystem,
     AgentId,
 };
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use chrono::Utc;
+
 
 /// MCP Server for Negotiation Agents
 pub struct NegotiationMcpServer {
+    #[allow(dead_code)]
     config: AppConfig,
     discovery: Arc<RwLock<DiscoveryService>>,
     trust_system: Arc<RwLock<TrustSystem>>,
@@ -60,7 +61,7 @@ impl NegotiationMcpServer {
                     trust_system,
                     settlement,
                 ).await {
-                    eprintln!("Connection error from {}: {}", addr, e);
+                    eprintln!("Connection error from {addr}: {e}");
                 }
             });
         }
@@ -124,14 +125,14 @@ impl NegotiationMcpServer {
         params: serde_json::Value,
         discovery: Arc<RwLock<DiscoveryService>>,
         trust_system: Arc<RwLock<TrustSystem>>,
-        settlement: Arc<RwLock<SettlementService>>,
+        _settlement: Arc<RwLock<SettlementService>>,
     ) -> Result<serde_json::Value> {
         let tool_call: ToolCall = serde_json::from_value(params)?;
 
         match tool_call.name.as_str() {
             "register_agent" => {
                 let request: RegisterRequest = serde_json::from_value(tool_call.arguments)?;
-                let mut discovery = discovery.write().await;
+                let discovery = discovery.write().await;
                 // Mock agent info creation
                 let agent_info = crate::model::AgentInfo {
                     id: AgentId::new_v4(),
@@ -145,12 +146,12 @@ impl NegotiationMcpServer {
                     created_at: chrono::Utc::now(),
                     last_active: chrono::Utc::now(),
                 };
-                let result = discovery.register_agent(agent_info).await?;
-                Ok(serde_json::to_value(result)?)
+                discovery.register_agent(agent_info).await?;
+                Ok(serde_json::to_value(())?)
             },
             "search_agents" => {
                 let request: SearchRequest = serde_json::from_value(tool_call.arguments)?;
-                let mut discovery = discovery.write().await;
+                let discovery = discovery.write().await;
                 let result = discovery.search_sellers(request).await?;
                 Ok(serde_json::to_value(result)?)
             },
@@ -174,7 +175,7 @@ impl NegotiationMcpServer {
 
     async fn handle_resource_read(
         params: serde_json::Value,
-        discovery: Arc<RwLock<DiscoveryService>>,
+        _discovery: Arc<RwLock<DiscoveryService>>,
         trust_system: Arc<RwLock<TrustSystem>>,
     ) -> Result<serde_json::Value> {
         let resource_req: ResourceRequest = serde_json::from_value(params)?;

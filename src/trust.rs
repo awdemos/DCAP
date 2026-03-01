@@ -80,8 +80,7 @@ pub struct TrustSystem {
 impl TrustSystem {
     pub fn new() -> Result<Self> {
         let jwt_secret = std::env::var("JWT_SECRET")
-            .unwrap_or_else(|_| "your-secret-key-here".to_string());
-
+            .map_err(|_| NegotiationError::Config("JWT_SECRET environment variable must be set".to_string()))?;
         Ok(Self {
             jwt_secret,
             reputation_cache: HashMap::new(),
@@ -103,7 +102,7 @@ impl TrustSystem {
 
     pub async fn update_reputation(&mut self, agent_id: AgentId, score_change: i32) -> Result<()> {
         let current_score = self.get_reputation(agent_id).await?;
-        let new_score = (current_score as i32 + score_change).max(0).min(100) as u32;
+        let new_score = (current_score as i32 + score_change).clamp(0, 100) as u32;
 
         // Update cache
         let reputation_score = ReputationScore {
@@ -124,7 +123,7 @@ impl TrustSystem {
             agent_id,
             activity_type: TrustActivityType::SystemAdjustment,
             score_change,
-            reason: format!("Reputation adjusted by {}", score_change),
+            reason: format!("Reputation adjusted by {score_change}"),
             related_agent_id: None,
             timestamp: Utc::now(),
         }).await?;
@@ -200,14 +199,14 @@ impl TrustSystem {
             exp: (Utc::now() + Duration::hours(24)).timestamp() as usize,
             iat: Utc::now().timestamp() as usize,
             reputation_score,
-            trust_level: format!("{:?}", trust_level).to_lowercase(),
+            trust_level: format!("{trust_level:?}").to_lowercase(),
         };
 
         encode(
             &Header::default(),
             &claims,
             &EncodingKey::from_secret(self.jwt_secret.as_ref()),
-        ).map_err(|e| NegotiationError::Auth(format!("Failed to generate JWT: {}", e)))
+        ).map_err(|e| NegotiationError::Auth(format!("Failed to generate JWT: {e}")))
     }
 
     pub async fn validate_jwt(&self, token: &str) -> Result<JWTClaims> {
@@ -219,7 +218,7 @@ impl TrustSystem {
             &DecodingKey::from_secret(self.jwt_secret.as_ref()),
             &validation,
         ).map(|data| data.claims)
-            .map_err(|e| NegotiationError::Auth(format!("Invalid JWT: {}", e)))
+            .map_err(|e| NegotiationError::Auth(format!("Invalid JWT: {e}")))
     }
 
     pub async fn check_min_reputation(&self, agent_id: AgentId, min_score: u32) -> Result<bool> {
@@ -271,7 +270,7 @@ impl TrustSystem {
         }
     }
 
-    pub async fn get_reputation_history(&self, agent_id: AgentId) -> Result<Vec<TrustActivity>> {
+    pub async fn get_reputation_history(&self, _agent_id: AgentId) -> Result<Vec<TrustActivity>> {
         // This would query the database for trust activities
         // For now, return empty vector
         Ok(vec![])

@@ -10,8 +10,8 @@ use chrono::{Duration, Utc, Timelike};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use uuid::Uuid;
-use base64::{engine::general_purpose, Engine};
+
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct BuyerAgentConfig {
@@ -78,7 +78,7 @@ impl BuyerAgent {
         let mut all_products = Vec::new();
         for seller in sellers {
             let response = self.client
-                .get(&format!("{}/products", seller.endpoint))
+            .get(format!("{}/products", seller.endpoint))
                 .send()
                 .await?;
 
@@ -117,7 +117,7 @@ impl BuyerAgent {
         self.active_negotiations.insert(negotiation.id, negotiation.clone());
 
         let response = self.client
-            .post(&format!("{}/quote", seller.endpoint))
+            .post(format!("{}/quote", seller.endpoint))
             .json(&rfq)
             .send()
             .await?;
@@ -143,7 +143,7 @@ impl BuyerAgent {
 
         let seller = self.discovery.get_agent(negotiation.seller_id).await?;
         let response = self.client
-            .post(&format!("{}/negotiate/{}", seller.endpoint, negotiation_id))
+            .post(format!("{}/negotiate/{}", seller.endpoint, negotiation_id))
             .json(&serde_json::json!({
                 "counter_offer": counter_offer
             }))
@@ -207,7 +207,7 @@ impl BuyerAgent {
 
     async fn find_product(&self, product_id: &str) -> Result<Product> {
         let response = self.client
-            .get(&format!("{}/discovery/products/{}", self.discovery.endpoint(), product_id))
+            .get(format!("{}/discovery/products/{}", self.discovery.endpoint(), product_id))
             .send()
             .await?;
 
@@ -226,7 +226,7 @@ impl BuyerAgent {
 
         let seller = self.discovery.get_agent(negotiation.seller_id).await?;
         let response = self.client
-            .get(&format!("{}/quote/{}", seller.endpoint, negotiation.rfq_id))
+            .get(format!("{}/quote/{}", seller.endpoint, negotiation.rfq_id))
             .send()
             .await?;
 
@@ -364,7 +364,7 @@ impl SellerAgent {
 
         // Time-based pricing
         let hour = Utc::now().hour();
-        if hour >= 9 && hour <= 17 { // Business hours
+        if (9..=17).contains(&hour) {
             factor *= 1.02;
         }
 

@@ -1,10 +1,10 @@
 use dcap::{
     discovery::{DiscoveryServer, RegisterRequest, SearchRequest},
-    error::NegotiationError,
+
 };
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
+
     response::Json,
     routing::{get, post},
     Router,

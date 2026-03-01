@@ -1,7 +1,7 @@
 use dcap::{
     agent::{BuyerAgent, BuyerAgentConfig, LLMConfig},
     discovery::DiscoveryService,
-    error::NegotiationError,
+
     settlement::SettlementService,
     trust::TrustSystem,
 };
@@ -103,7 +103,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                             println!("  {} - ${} ({})", product.name, product.base_price, product.category);
                         }
                     }
-                    Err(e) => println!("Error browsing products: {}", e),
+                    Err(e) => println!("Error browsing products: {e}"),
                 }
             }
             cmd if cmd.starts_with("quote") => {
@@ -114,8 +114,8 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                     let max_price = parts[3].parse().unwrap_or(0.0);
 
                     match buyer_agent.request_quote(product_id.to_string(), quantity, max_price).await {
-                        Ok(negotiation_id) => println!("Quote requested. Negotiation ID: {}", negotiation_id),
-                        Err(e) => println!("Error requesting quote: {}", e),
+                        Ok(negotiation_id) => println!("Quote requested. Negotiation ID: {negotiation_id}"),
+                        Err(e) => println!("Error requesting quote: {e}"),
                     }
                 } else {
                     println!("Usage: quote <product_id> <quantity> <max_price>");
@@ -129,7 +129,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
                         match buyer_agent.negotiate(negotiation_id, counter_offer).await {
                             Ok(()) => println!("Negotiation offer sent"),
-                            Err(e) => println!("Error negotiating: {}", e),
+                            Err(e) => println!("Error negotiating: {e}"),
                         }
                     } else {
                         println!("Invalid negotiation ID format");
@@ -144,7 +144,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                     if let Ok(negotiation_id) = uuid::Uuid::parse_str(parts[1]) {
                         match buyer_agent.accept_quote(negotiation_id).await {
                             Ok(()) => println!("Quote accepted and payment processed"),
-                            Err(e) => println!("Error accepting quote: {}", e),
+                            Err(e) => println!("Error accepting quote: {e}"),
                         }
                     } else {
                         println!("Invalid negotiation ID format");
@@ -159,7 +159,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
                     if let Ok(negotiation_id) = uuid::Uuid::parse_str(parts[1]) {
                         match buyer_agent.reject_quote(negotiation_id).await {
                             Ok(()) => println!("Quote rejected"),
-                            Err(e) => println!("Error rejecting quote: {}", e),
+                            Err(e) => println!("Error rejecting quote: {e}"),
                         }
                     } else {
                         println!("Invalid negotiation ID format");

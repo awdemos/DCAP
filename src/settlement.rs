@@ -190,7 +190,7 @@ impl SettlementService {
 
         Ok(PaymentResult {
             success: true,
-            payment_id: format!("escrow_release_{}", escrow_id),
+            payment_id: format!("escrow_release_{escrow_id}"),
             transaction_id: uuid::Uuid::new_v4(),
             amount: 0.0, // Would get from database
             currency: "USD".to_string(),
@@ -226,7 +226,7 @@ impl SettlementService {
         Ok(PaymentStatus::Succeeded)
     }
 
-    pub async fn create_payment_intent(&self, amount: f64, currency: &str) -> Result<String> {
+    pub async fn create_payment_intent(&self, _amount: f64, _currency: &str) -> Result<String> {
         // Mock payment intent creation
         Ok(format!("pi_mock_{}", uuid::Uuid::new_v4()))
     }
@@ -252,6 +252,7 @@ impl SettlementService {
         Ok(true)
     }
 
+    #[allow(dead_code)]
     fn map_payment_status(&self, success: bool) -> PaymentStatus {
         if success {
             PaymentStatus::Succeeded
@@ -260,7 +261,7 @@ impl SettlementService {
         }
     }
 
-    pub async fn get_payment_methods(&self, agent_id: AgentId) -> Result<Vec<PaymentMethod>> {
+    pub async fn get_payment_methods(&self, _agent_id: AgentId) -> Result<Vec<PaymentMethod>> {
         // This would query the agent's available payment methods
         // For now, return all supported methods
         Ok(vec![

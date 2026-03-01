@@ -1,4 +1,4 @@
-use std::fmt;
+
 use thiserror::Error;
 use crate::AgentId;
 

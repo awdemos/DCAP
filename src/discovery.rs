@@ -5,7 +5,7 @@ use crate::{
 };
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RegisterRequest {
@@ -58,7 +58,7 @@ impl DiscoveryService {
             };
 
             let response = self.client
-                .post(&format!("{}/register", self.endpoint))
+                .post(format!("{}/register", self.endpoint))
                 .json(&request)
                 .send()
                 .await?;
@@ -92,7 +92,7 @@ impl DiscoveryService {
             });
         }
 
-        if let Some(category) = &request.category {
+        if let Some(_category) = &request.category {
             // This would require filtering by product categories
             // For now, we'll just return all sellers
         }
@@ -104,7 +104,7 @@ impl DiscoveryService {
         // Try remote discovery service
         if !self.endpoint.is_empty() {
             let response = self.client
-                .get(&format!("{}/agents/{}", self.endpoint, agent_id))
+                .get(format!("{}/agents/{}", self.endpoint, agent_id))
                 .send()
                 .await?;
 
@@ -116,7 +116,7 @@ impl DiscoveryService {
         Err(NegotiationError::AgentNotFound(agent_id))
     }
 
-    pub async fn get_seller_by_product(&self, product_id: &str) -> Result<AgentInfo> {
+    pub async fn get_seller_by_product(&self, _product_id: &str) -> Result<AgentInfo> {
         // This would typically involve a product database lookup
         // For now, we'll return a mock seller
         let agents = self.search_sellers(SearchRequest {
@@ -132,7 +132,7 @@ impl DiscoveryService {
 
     async fn search_remote_sellers(&self, request: &SearchRequest) -> Result<Vec<AgentInfo>> {
         let response = self.client
-            .post(&format!("{}/search", self.endpoint))
+            .post(format!("{}/search", self.endpoint))
             .json(request)
             .send()
             .await?;
@@ -166,7 +166,7 @@ impl DiscoveryService {
         let agent = self.get_agent(agent_id).await?;
 
         let response = self.client
-            .get(&format!("{}/health", agent.endpoint))
+            .get(format!("{}/health", agent.endpoint))
             .send()
             .await?;
 

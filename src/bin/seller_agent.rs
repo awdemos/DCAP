@@ -2,15 +2,14 @@ use dcap::{
     agent::{SellerAgent, SellerAgentConfig, LLMConfig},
     config::AppConfig,
     discovery::DiscoveryService,
-    error::NegotiationError,
-    model::{Product, RFQ, Quote, PaymentMethod},
+
+    model::{Product, RFQ, PaymentMethod},
     settlement::SettlementService,
     trust::TrustSystem,
 };
-use chrono;
 use axum::{
-    extract::{Path, Query, State},
-    http::StatusCode,
+    extract::{Path, State},
+
     response::Json,
     routing::{get, post},
     Router,
@@ -18,7 +17,7 @@ use axum::{
 use clap::Parser;
 use std::collections::HashMap;
 use std::env;
-use std::sync::{Arc, Mutex};
+
 use tokio::net::TcpListener;
 
 #[derive(Parser)]
@@ -40,6 +39,7 @@ struct Args {
 
 #[derive(Clone)]
 struct AppState {
+    #[allow(dead_code)]
     seller_agent_config: SellerAgentConfig,
 }
 
@@ -51,7 +51,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
 
     let args = Args::parse();
 
-    let config = AppConfig::load(&args.config)?;
+    let _config = AppConfig::load(&args.config)?;
     let discovery = DiscoveryService::new(args.discovery_endpoint.clone());
     let trust = TrustSystem::new()?;
     let settlement_config = dcap::settlement::SettlementConfig {
@@ -59,7 +59,7 @@ async fn main() -> std::result::Result<(), Box<dyn std::error::Error>> {
         solana_rpc_url: None,
         escrow_service_url: None,
     };
-    let settlement = SettlementService::new(settlement_config).await?;
+    let _settlement = SettlementService::new(settlement_config).await?;
 
     let products = vec![
         Product {
@@ -146,8 +146,9 @@ async fn handle_quote(
 }
 
 async fn get_quote(
-    State(state): State<AppState>,
-    Path(rfq_id): Path<uuid::Uuid>,
+    State(_state): State<AppState>,
+    Path(_rfq_id): Path<uuid::Uuid>,
+
 ) -> Json<serde_json::Value> {
     // This would typically fetch the quote from the database
     // For now, we'll return a mock response
@@ -181,7 +182,7 @@ async fn handle_negotiation(
 }
 
 async fn list_products(
-    State(state): State<AppState>,
+    State(_state): State<AppState>,
 ) -> Json<serde_json::Value> {
     // In a real implementation, this would query the database
     // For now, return mock products

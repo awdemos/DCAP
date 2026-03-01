@@ -1,6 +1,4 @@
 use dcap::{
-    error::Result,
-    model::PaymentMethod,
     settlement::{PaymentRequest, PaymentResult, SettlementConfig, SettlementService},
 };
 use axum::{
@@ -11,7 +9,7 @@ use axum::{
     Router,
 };
 use clap::Parser;
-use std::collections::HashMap;
+
 use tokio::net::TcpListener;
 
 #[derive(Parser)]
@@ -19,20 +17,24 @@ use tokio::net::TcpListener;
 #[command(about = "Settlement service for payment processing")]
 struct Args {
     #[arg(short, long, default_value = "8002")]
+
     port: u16,
 
-    #[arg(long, env = "STRIPE_SECRET_KEY")]
+    /// Stripe secret key (set via STRIPE_SECRET_KEY env var)
+    #[arg(long)]
     stripe_secret_key: Option<String>,
 
-    #[arg(long, env = "SOLANA_RPC_URL")]
+    /// Solana RPC URL (set via SOLANA_RPC_URL env var)
+    #[arg(long)]
     solana_rpc_url: Option<String>,
 
-    #[arg(long, env = "ESCROW_SERVICE_URL")]
+    /// Escrow service URL (set via ESCROW_SERVICE_URL env var)
+    #[arg(long)]
     escrow_service_url: Option<String>,
 }
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() -> anyhow::Result<()> {
     tracing_subscriber::fmt()
         .with_max_level(tracing::Level::INFO)
         .init();
@@ -73,7 +75,7 @@ struct AppState {
 async fn create_payment(
     State(state): State<AppState>,
     Json(request): Json<serde_json::Value>,
-) -> Result<Json<PaymentResult>, StatusCode> {
+) -> std::result::Result<Json<PaymentResult>, StatusCode> {
     let payment_request = serde_json::from_value::<PaymentRequest>(request.clone())
         .map_err(|_| StatusCode::BAD_REQUEST)?;
 
@@ -89,7 +91,7 @@ async fn create_payment(
 async fn get_payment_status(
     State(state): State<AppState>,
     Path(payment_id): Path<String>,
-) -> Result<Json<serde_json::Value>, StatusCode> {
+) -> std::result::Result<Json<serde_json::Value>, StatusCode> {
     match state.settlement_service.get_payment_status(&payment_id).await {
         Ok(status) => Ok(Json(serde_json::json!({
             "payment_id": payment_id,
@@ -105,7 +107,7 @@ async fn get_payment_status(
 async fn refund_payment(
     State(state): State<AppState>,
     Path(payment_id): Path<String>,
-) -> Result<Json<PaymentResult>, StatusCode> {
+) -> std::result::Result<Json<PaymentResult>, StatusCode> {
     match state.settlement_service.refund_payment(&payment_id).await {
         Ok(result) => Ok(Json(result)),
         Err(e) => {
@@ -118,7 +120,7 @@ async fn refund_payment(
 async fn release_escrow(
     State(state): State<AppState>,
     Path(escrow_id): Path<uuid::Uuid>,
-) -> Result<Json<PaymentResult>, StatusCode> {
+) -> std::result::Result<Json<PaymentResult>, StatusCode> {
     match state.settlement_service.release_escrow(escrow_id).await {
         Ok(result) => Ok(Json(result)),
         Err(e) => {
@@ -132,7 +134,7 @@ async fn handle_stripe_webhook(
     State(state): State<AppState>,
     headers: axum::http::HeaderMap,
     body: String,
-) -> Result<Json<serde_json::Value>, StatusCode> {
+) -> std::result::Result<Json<serde_json::Value>, StatusCode> {
     let signature = headers
         .get("stripe-signature")
         .and_then(|h| h.to_str().ok())
