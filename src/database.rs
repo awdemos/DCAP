@@ -1,4 +1,5 @@
 use crate::{model::*, AgentId, NegotiationError, Result, TransactionId};
+use chrono::Utc;
 use sqlx::{sqlite::SqliteConnectOptions, Row, SqlitePool};
 use std::str::FromStr;
 
@@ -182,14 +183,14 @@ impl Database {
 
         match row {
             Some(row) => {
-                let agent_type = match row.get::<_, String>(1).as_str() {
+                let agent_type = match row.get::<String, _>(1).as_str() {
                     "Buyer" => AgentType::Buyer,
                     "Seller" => AgentType::Seller,
                     _ => return Err(NegotiationError::Validation("Invalid agent type".to_string())),
                 };
 
                 let agent = AgentInfo {
-                    id: AgentId::parse_str(&row.get::<_, String>(0))?,
+                    id: AgentId::parse_str(&row.get::<String, _>(0))?,
                     agent_type,
                     name: row.get(2),
                     endpoint: row.get(3),
@@ -220,14 +221,14 @@ impl Database {
 
         let mut agents = Vec::new();
         for row in rows {
-            let agent_type = match row.get::<_, String>(1).as_str() {
+            let agent_type = match row.get::<String, _>(1).as_str() {
                 "Buyer" => AgentType::Buyer,
                 "Seller" => AgentType::Seller,
                 _ => return Err(NegotiationError::Validation("Invalid agent type".to_string())),
             };
 
             agents.push(AgentInfo {
-                id: AgentId::parse_str(&row.get::<_, String>(0))?,
+                id: AgentId::parse_str(&row.get::<String, _>(0))?,
                 agent_type,
                 name: row.get(2),
                 endpoint: row.get(3),
@@ -329,7 +330,7 @@ impl Database {
 
         match row {
             Some(row) => {
-                let status = match row.get::<_, String>(10).as_str() {
+                let status = match row.get::<String, _>(10).as_str() {
                     "pending" => NegotiationStatus::Pending,
                     "quoted" => NegotiationStatus::Quoted,
                     "negotiating" => NegotiationStatus::Negotiating,
@@ -341,11 +342,11 @@ impl Database {
                 };
 
                 let negotiation = Negotiation {
-                    id: TransactionId::parse_str(&row.get::<_, String>(0))?,
-                    rfq_id: TransactionId::parse_str(&row.get::<_, String>(1))?,
-                    quote_id: row.get::<_, Option<String>>(2).map(|s| TransactionId::parse_str(&s)).transpose()?,
-                    buyer_id: AgentId::parse_str(&row.get::<_, String>(3))?,
-                    seller_id: AgentId::parse_str(&row.get::<_, String>(4))?,
+                    id: TransactionId::parse_str(&row.get::<String, _>(0))?,
+                    rfq_id: TransactionId::parse_str(&row.get::<String, _>(1))?,
+                    quote_id: row.get::<Option<String>, _>(2).map(|s| TransactionId::parse_str(&s)).transpose()?,
+                    buyer_id: AgentId::parse_str(&row.get::<String, _>(3))?,
+                    seller_id: AgentId::parse_str(&row.get::<String, _>(4))?,
                     product_id: row.get(5),
                     quantity: row.get(6),
                     opening_bid: row.get(7),
@@ -397,8 +398,8 @@ impl Database {
         .bind(record.close_price)
         .bind(record.delta)
         .bind(record.timestamp)
-        .bind(record.duration_seconds)
-        .bind(record.message_count)
+        .bind(record.duration_seconds as i64)
+        .bind(record.message_count as i64)
         .execute(&self.pool)
         .await?;
 
@@ -419,8 +420,8 @@ impl Database {
         let mut records = Vec::new();
         for row in rows {
             records.push(NegotiationRecord {
-                buyer_id: AgentId::parse_str(&row.get::<_, String>(0))?,
-                seller_id: AgentId::parse_str(&row.get::<_, String>(1))?,
+                buyer_id: AgentId::parse_str(&row.get::<String, _>(0))?,
+                seller_id: AgentId::parse_str(&row.get::<String, _>(1))?,
                 product_hash: row.get(2),
                 opening_bid: row.get(3),
                 close_price: row.get(4),
